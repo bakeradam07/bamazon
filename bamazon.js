@@ -27,16 +27,17 @@ function start() {
    var query = "SELECT * FROM products";
    connection.query(query, function (err, res){
        if (err) throw err;
+       console.log("\n")
        console.log("Available Inventory");
-       console.log("\n--------------------------------------------\n");
+       console.log("------------------------------------------------------------------------------------");
        for (var i = 0; i < res.length; i++) {
-       console.log("Product ID: " + res[i].item_id + " || Product Name: " + res[i].product_name + " || Department: " + res[i].department_name + "|| Stock: " + res[i].stock_quantity);
+        console.log("Product ID: " + res[i].item_id + " || Product Name: " + res[i].product_name + " || Department: " +  res[i].department_name + "|| Stock: " + res[i].stock_quantity);
        };
-   })
-   makePurchase();
-  }
-
-  function makePurchase() {
+       console.log("------------------------------------------------------------------------------------");
+       console.log("\n")
+       makePurchase();
+   });
+   function makePurchase() {
     inquirer
     .prompt({
       name: "makepurchase",
@@ -45,8 +46,7 @@ function start() {
       choices: ["Yes", "No"]
     })
     .then(function(answer) {
-      // based on their answer, either call the bid or the post functions
-      if (answer.makePurchase === "Yes") {
+      if (answer.makepurchase === "Yes") {
         itemPurchase();
       }
       else {
@@ -54,7 +54,46 @@ function start() {
         console.log("Thanks for shopping with us!")
       }
     });
-};
-
-
-
+  }
+}
+  
+function itemPurchase () {
+  var query = "SELECT * FROM products";
+  connection.query(query, function (err, res) {
+    inquirer
+    .prompt([
+      {
+        name: "choice",
+          type: "rawlist",
+          choices: function() {
+            var choiceArray = [];
+            for (var i = 0; i < res.length; i++) {
+              choiceArray.push(res[i].product_name);
+            }
+            return choiceArray;
+          },
+          message: "What product would you like to purchase?",
+          validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        }
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How many would you like to purchase?",
+        validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        }
+      }
+    ])
+    .then(function(answer) {
+        console.log("You've chosen to buy " + answer.quantity + " " + answer.choice);       
+      });
+    });
+  }
