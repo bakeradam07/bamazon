@@ -93,7 +93,8 @@ function itemPurchase () {
       }
     ])
     .then(function(answer) {
-        console.log("You've chosen to buy " + answer.quantity + " " + answer.choice);       
+        console.log("\n")
+        console.log("You've chosen to buy " + answer.quantity + " " + answer.choice);             
       });
     });
   }
