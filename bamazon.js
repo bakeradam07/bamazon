@@ -37,6 +37,9 @@ function start() {
        console.log("\n")
        makePurchase();
    });
+
+  }
+   
    function makePurchase() {
     inquirer
     .prompt({
@@ -55,7 +58,7 @@ function start() {
       }
     });
   }
-}
+
   
 function itemPurchase () {
   var query = "SELECT * FROM products";
@@ -93,8 +96,49 @@ function itemPurchase () {
       }
     ])
     .then(function(answer) {
-        console.log("\n")
-        console.log("You've chosen to buy " + answer.quantity + " " + answer.choice);             
-      });
+      var chosenItem;
+        for (var i = 0; i < res.length; i++) {
+          if (res[i].product_name === answer.choice) {
+            chosenItem = res[i];
+          }
+        }
+
+        if (chosenItem.stock_quantity > parseInt(answer.quantity)) {
+          
+          connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+              {
+                stock_quantity: chosenItem.stock_quantity - parseInt(answer.quantity)
+              },
+              {
+                item_id: chosenItem.item_id
+              }
+            ],
+            function(error) {
+              if (error) throw err;
+              console.log("\n")
+              console.log("You've chosen to buy " + answer.quantity + " " + answer.product_name);
+              console.log("------------------------------------------------------------------------------------");
+              console.log("\n")
+              console.log("Order Summary");
+              console.log("------------------------------------------------------------------------------------");
+              console.log("Product: " + answer.product_name);
+              console.log("Quantity: " + answer.quantity);
+              console.log("------------------------------------------------------------------------------------");
+              console.log("Total: " + chosenItem.price * parseInt(answer.quantity));
+              console.log("\n")
+              start();
+            }
+          );
+        }
+        else {
+          console.log("------------------------------------------------------------------------------------");
+          console.log("Insuffecient Quantity");
+          start();
+        }
     });
-  }
+  });
+}
+
+
