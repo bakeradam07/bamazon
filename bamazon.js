@@ -31,7 +31,7 @@ function start() {
        console.log("Available Inventory");
        console.log("------------------------------------------------------------------------------------");
        for (var i = 0; i < res.length; i++) {
-        console.log("Product ID: " + res[i].item_id + " || Product Name: " + res[i].product_name + " || Department: " +  res[i].department_name + "|| Stock: " + res[i].stock_quantity);
+        console.log("Product ID: " + res[i].item_id + " || Product Name: " + res[i].product_name + " || Department: " +  res[i].department_name + "|| Stock: " + res[i].stock_quantity + "|| Price: $" + res[i].price);
        };
        console.log("------------------------------------------------------------------------------------");
        console.log("\n")
@@ -118,15 +118,15 @@ function itemPurchase () {
             function(error) {
               if (error) throw err;
               console.log("\n")
-              console.log("You've chosen to buy " + answer.quantity + " " + answer.product_name);
+              console.log("You've chosen to buy " + answer.quantity + " " + answer.choice);
               console.log("------------------------------------------------------------------------------------");
               console.log("\n")
               console.log("Order Summary");
               console.log("------------------------------------------------------------------------------------");
-              console.log("Product: " + answer.product_name);
+              console.log("Product: " + answer.choice);
               console.log("Quantity: " + answer.quantity);
               console.log("------------------------------------------------------------------------------------");
-              console.log("Total: " + chosenItem.price * parseInt(answer.quantity));
+              console.log("Total: $" + chosenItem.price * parseInt(answer.quantity));
               console.log("\n")
               start();
             }
@@ -134,7 +134,8 @@ function itemPurchase () {
         }
         else {
           console.log("------------------------------------------------------------------------------------");
-          console.log("Insuffecient Quantity");
+          console.log("Insufficient Quantity");
+          console.log("Please choose Again!");
           start();
         }
     });
